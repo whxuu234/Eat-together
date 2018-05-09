@@ -4,19 +4,33 @@
     <title>node.js</title>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
-    <script src="main.js"></script>
+    <script src="/checkOnline.js"></script>
+    <script>
+        $( document ).ready( function() {
+                setInterval( function() {
+                    if( $('#username').val() == '') {
+                        console.log('no username');
+                        return;
+                    }
+                    sendOnlineSignal( function(data) {
+                        let online_users = JSON.parse(data);
+                        let online_users_string = 'Users : \n';
+                        let obj = $('#ajax_content');
+                        for(i in online_users) {
+                            online_users_string += i + '\n';
+                        }
+                        obj.text( online_users_string );
+                        obj.html( obj.html().replace(/\n/g, '<br/>') );
+                    });
+                }, 5000 );
+        });
+    </script>
   </head>
 
   <body>
-    <div id="meal">
-      <select name="meal">
-        <option>早餐</option>
-        <option>午餐</option>
-        <option>晚餐</option>
-        <option>消夜</option>
-      </select>
-      <button>submit via post</button>
-      <h1></h1>
-    </div>
+    <form id="ajax_form">
+        username: <input id="username" type="text"><br>
+        <h1 id="ajax_content"></h1>
+    </form>
   </body>
 </html>
